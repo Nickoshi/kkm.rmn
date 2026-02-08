@@ -1,0 +1,566 @@
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>KKMRMN</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div class="wrap">
+					<header class="hero"></header>
+
+					<div class="promo-wrap" id="promoWrap">
+						<p class="promo">ENJOY 70% OFF DISCOUNTS! Don't Miss Out on Exclusive Savings – Shop Now and Save!!!!</p>
+					</div>
+			<div class="layout">
+				<aside class="panel">
+					<h2>Order Form</h2>
+					<form id="orderForm" onsubmit="return false;">
+						<label for="last">Last Name <span class="required">*</span></label>
+						<input id="last" name="last" type="text" required />
+						<label for="first">First Name <span class="required">*</span></label>
+						<input id="first" name="first" type="text" required />
+						<label for="email">Email <span class="required">*</span></label>
+						<input id="email" name="email" type="email" required />
+						<label for="phone">Contact Number <span class="required">*</span></label>
+						<input id="phone" name="phone" type="tel" required />
+
+						<div class="small option-title"><strong>Delivery Method</strong> <span class="required">*</span></div>
+						<select id="deliveryMethod" name="deliveryMethod" required>
+							<option value="" selected disabled>Please select</option>
+							<option value="Pickup">PICK-UP</option>
+							<option value="BGC - High Street Plaza">BGC HIGH STREET PLAZA</option>
+						</select>
+						<div class="spacer" aria-hidden="true"></div>
+
+						<div>
+							<div class="small"><strong>Terms &amp; Conditions</strong></div>
+							<div class="terms">
+								<ol>
+									<li>This sale is exclusively for current employees of TRIMARK GROUP only.</li>
+									<li>Products available during the employee sale are limited in quantity and are offered on a first-come, first-served basis.</li>
+									<li>All sales are final. No returns, exchanges, or refunds will be accepted. Please inspect all items before purchase.</li>
+									<li>Purchases are intended for personal use only and not for resale. Products are sold without packaging to prevent reselling.</li>
+									<li>All purchases must be made using personal payment methods (Cash &amp; GCash). Payroll deductions are not permitted.</li>
+									<li>KIKO Milano reserves the right to modify or cancel the sale at any time without prior notice.</li>
+								</ol>
+							</div>
+							<div class="checkbox-row">
+								<input id="agree" type="checkbox" required />
+								<label for="agree">I agree to Terms &amp; Conditions <span class="required">*</span></label>
+							</div>
+						</div>
+
+						<div class="mt-8">
+						<div class="small option-title"><strong>Payment Method</strong> <span class="required">*</span></div>
+						<select id="paymentMethod" name="paymentMethod" required>
+							<option value="" selected disabled>Please select</option>
+							<option value="Gcash">GCash</option>
+							<option value="Cash">Cash on Pickup</option>
+						</select>
+					</div>
+
+					</form>
+					<div class="order-note">
+						<p class="order-note-msg">Your order will be processed, and shipping fees will be covered by the customer.</p>
+						<p class="order-note-contact">Kindly contact us at <strong>09772957480</strong></p>
+					</div>
+				</aside>
+
+				<main>
+					<div class="catalog">
+						<div class="toolbar">
+							<div><strong>Product Catalog</strong></div>
+							<div class="small"> Please Select items and Set Quantities</div>
+						</div>
+
+						<div class="grid" id="productGrid" aria-live="polite"></div>
+						<div class="catalog-footer" aria-live="polite">
+							<div class="cf-total">
+								<div class="cf-total-label small">Total</div>
+								<div class="cf-total-value" id="totalAmountFooter">₱0.00</div>
+							</div>
+							<div class="footer-actions">
+								<button id="openBasket" class="btn btn-basket" type="button" aria-label="Open basket">
+									<svg class="basket-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+										<path d="M4 8h16l-1.5 10H5.5L4 8zm4.5 0L12 4.5 15.5 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+									<span class="basket-count" id="basketCount">0</span>
+								</button>
+								<button id="orderNow" class="btn btn-green" disabled>ORDER NOW</button>
+							</div>
+						</div>
+				</main>
+			</div>
+		</div>
+
+	    <!-- Product modal -->
+	    <div id="productModal" class="modal" role="dialog" aria-hidden="true">
+	      <div class="modal-box">
+			<div class="modal-header">
+					<div class="modal-img" id="modalImg">IMG</div>
+					<div class="modal-details">
+						<h2 class="modal-title"></h2>
+						<div class="modal-sub small"></div>
+						<div class="modal-price-row">
+							<div class="modal-price"></div>
+							<div class="modal-price-original"></div>
+						</div>
+						<div class="small">Stock: <strong class="modal-stock"></strong></div>
+					</div>
+	          <button class="modal-close" aria-label="Close">✕</button>
+	        </div>
+				<div class="modal-body">
+					<div class="small"> ENJOY 70% OFF DISCOUNTS! </div>
+					<div class="shade-list"></div>
+				</div>
+	      </div>
+	    </div>
+
+	    <!-- Status modal -->
+	    <div id="statusModal" class="modal" role="dialog" aria-hidden="true">
+	      <div class="modal-box status-box">
+	        <div class="status-head">
+	          <div class="status-title" id="statusTitle">Status</div>
+	        </div>
+	        <div class="status-body" id="statusBody"></div>
+	        <div class="status-actions">
+	          <button class="btn" id="statusOk">OK</button>
+	        </div>
+	      </div>
+	    </div>
+
+	    <!-- Basket modal -->
+	    <div id="basketModal" class="modal" role="dialog" aria-hidden="true">
+	      <div class="modal-box basket-box">
+			<div class="basket-head">
+				<div class="status-title">My Basket</div>
+				<button class="modal-close" aria-label="Close Basket">&times;</button>
+			</div>
+			<div class="basket-items" id="basketItems"></div>
+			<div class="basket-footer">
+				<div class="small">Total</div>
+				<div class="basket-total" id="basketTotal">â‚±0.00</div>
+			</div>
+	      </div>
+	    </div>
+
+	    <script>
+			// ---- Product data (dynamic from Inventory sheet) ----
+			const PRODUCTS = [];
+			// Images are provided by the Inventory sheet via the "image" column.
+
+			// ---- Apps Script integration ----
+			const APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBQmdNEXheddg_ZR3CYwt-jZgXxnVHGFZnWlO1Es48KaWclgIr-85tlxSFnpQLHiAKUw/exec';
+
+			async function loadInventory(){
+				const res = await fetch(APP_SCRIPT_URL);
+				if(!res.ok){
+					throw new Error('Inventory fetch failed: HTTP ' + res.status);
+				}
+				const data = await res.json();
+				if(!Array.isArray(data)) return;
+
+				PRODUCTS.length = 0;
+				data.forEach(row=>{
+					const barcode = row.barcode;
+					if(barcode === undefined || barcode === null || barcode === '') return;
+					const retailPriceRaw = Number(row.retail_price || 0);
+					const discountedPriceRaw = Number(row.discounted_price || 0);
+					const hasRetail = Number.isFinite(retailPriceRaw) && retailPriceRaw > 0;
+					const hasDiscounted = Number.isFinite(discountedPriceRaw) && discountedPriceRaw > 0;
+					const finalPrice = hasDiscounted ? discountedPriceRaw : (hasRetail ? retailPriceRaw : 0);
+					const originalPrice = (hasRetail && hasDiscounted && retailPriceRaw > discountedPriceRaw) ? retailPriceRaw : null;
+					PRODUCTS.push({
+						barcode: String(barcode),
+						name: row.product || row.name || ('Item ' + barcode),
+						sub: '',
+						price: Number.isFinite(finalPrice) ? finalPrice : 0,
+						originalPrice: originalPrice,
+						stock: Number(row.quantity || 0),
+						image: row.image || ''
+					});
+				});
+			}
+
+			// render products
+			const grid = document.getElementById('productGrid');
+			const totalEl = document.getElementById('totalAmount') || document.getElementById('totalAmountFooter');
+			const totalFooterEl = document.getElementById('totalAmountFooter');
+			const agree = document.getElementById('agree');
+			const orderBtn = document.getElementById('orderNow');
+			const basketBtn = document.getElementById('openBasket');
+			const basketCountEl = document.getElementById('basketCount');
+			const basketItemsEl = document.getElementById('basketItems');
+			const basketTotalEl = document.getElementById('basketTotal');
+
+			function currency(n){return '₱' + n.toFixed(2)}
+
+			function render(){
+				grid.innerHTML = '';
+				PRODUCTS.forEach(p=>{
+					const outOfStock = !(typeof p.stock === 'number') || p.stock <= 0;
+					const card = document.createElement('div'); card.className = outOfStock ? 'card is-sold-out' : 'card';
+					  card.innerHTML = `
+									  <div class="card-top">
+														<div class="thumb ${outOfStock ? 'is-disabled' : ''}" data-barcode="${p.barcode}" tabindex="${outOfStock ? -1 : 0}" ${outOfStock ? 'aria-disabled="true"' : 'role="button"'}>
+															<img class="thumb-img" src="products/${p.image}" alt="${p.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><rect fill=%22%23ffe6dc%22 width=%27100%25%27 height=%27100%25%27/><text x=%2750%25%27 y=%2750%25%27 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2214%22 fill=%22%23eb1e08%22>IMG</text></svg>'"/>
+														</div>
+										<div class="meta">
+											<div class="name">${p.name}</div>
+											<div class="subtitle">${p.sub}</div>
+											<div class="price-row">
+												<div class="price">${currency(p.price)}</div>
+												${p.originalPrice ? `<div class="price-original">${currency(p.originalPrice)}</div>` : ''}
+											</div>
+											<div class="small">Stock: <strong class="stock-count">${p.stock}</strong></div>
+										</div>
+									</div>
+									<div class="card-bottom">
+										<div class="select-row"><input type="checkbox" class="selectItem" data-barcode="${p.barcode}" ${outOfStock? 'disabled':''} /> <div class="small">Select Item</div></div>
+										<div class="qty">
+											<label class="small">Qty</label>
+											<div class="qty-stepper">
+												<button type="button" class="qtyBtn qtyMinus" data-barcode="${p.barcode}" aria-label="Decrease quantity" ${outOfStock? 'disabled':''}>-</button>
+												<input type="number" class="qtyInput" data-barcode="${p.barcode}" min="1" value="1" max="${p.stock}" ${outOfStock? 'disabled':''} />
+												<button type="button" class="qtyBtn qtyPlus" data-barcode="${p.barcode}" aria-label="Increase quantity" ${outOfStock? 'disabled':''}>+</button>
+											</div>
+										</div>
+									</div>
+									<div class="small stock-indicator ${outOfStock? 'sold-out':''}">${outOfStock? 'SOLD OUT':''}</div>
+								`;
+					grid.appendChild(card);
+				})
+
+				// wire up events
+				document.querySelectorAll('.selectItem').forEach(cb=>cb.addEventListener('change',onSelect));
+				document.querySelectorAll('.qtyInput').forEach(i=>i.addEventListener('input',onQty));
+				document.querySelectorAll('.qtyBtn').forEach(btn=>btn.addEventListener('click',onQtyButtonClick));
+				document.querySelectorAll('.thumb:not(.is-disabled)').forEach(t=>t.addEventListener('click', onThumbClick));
+				document.querySelectorAll('.thumb:not(.is-disabled)').forEach(t=>t.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); onThumbClick(e); } }));
+				requestAnimationFrame(syncCatalogGridHeight);
+			}
+
+			function onSelect(e){
+				const barcode = String(e.target.dataset.barcode || '');
+				const qtyInput = document.querySelector(`.qtyInput[data-barcode="${barcode}"]`);
+				const qtyButtons = document.querySelectorAll(`.qtyBtn[data-barcode="${barcode}"]`);
+				qtyInput.disabled = !e.target.checked;
+				qtyButtons.forEach(btn=>btn.disabled = !e.target.checked);
+				if(!e.target.checked) qtyInput.value = 1;
+				updateTotal();
+				checkOrderButtonState();
+			}
+
+			function clampQtyInput(input){
+				const min = Number(input.min) || 1;
+				const maxRaw = Number(input.max);
+				const max = Number.isFinite(maxRaw) && maxRaw >= min ? maxRaw : min;
+				let value = Number(input.value);
+				if(!Number.isFinite(value)) value = min;
+				value = Math.trunc(value);
+				if(value < min) value = min;
+				if(value > max) value = max;
+				input.value = value;
+				return value;
+			}
+
+			function onQty(e){
+				clampQtyInput(e.target);
+				updateTotal();
+				checkOrderButtonState();
+			}
+
+			function onQtyButtonClick(e){
+				const button = e.currentTarget;
+				if(button.disabled) return;
+				const barcode = String(button.dataset.barcode || '');
+				const qtyInput = document.querySelector(`.qtyInput[data-barcode="${barcode}"]`);
+				if(!qtyInput || qtyInput.disabled) return;
+				const current = clampQtyInput(qtyInput);
+				const step = button.classList.contains('qtyPlus') ? 1 : -1;
+				qtyInput.value = current + step;
+				clampQtyInput(qtyInput);
+				updateTotal();
+				checkOrderButtonState();
+			}
+
+			function getSelectedItems(){
+				const items = [];
+				document.querySelectorAll('.selectItem:checked').forEach(cb=>{
+					const barcode = String(cb.dataset.barcode || '');
+					const prod = PRODUCTS.find(p=>p.barcode===barcode);
+					const qty = Number(document.querySelector(`.qtyInput[data-barcode="${barcode}"]`).value) || 1;
+					items.push({barcode:prod.barcode,name:prod.name,price:prod.price,qty,subtotal:prod.price*qty,image:prod.image || ''});
+				});
+				return items;
+			}
+
+			function updateTotal(){
+				const items = getSelectedItems();
+				const total = items.reduce((s,i)=>s + (i.price * i.qty), 0);
+				const formatted = currency(total);
+				if(totalEl){ totalEl.textContent = formatted; }
+				if(totalFooterEl && totalFooterEl !== totalEl){ totalFooterEl.textContent = formatted; }
+				updateBasketState(items, total);
+				return total;
+			}
+
+			function updateBasketState(items, total){
+				const selected = Array.isArray(items) ? items : getSelectedItems();
+				const grandTotal = (typeof total === 'number') ? total : selected.reduce((s,i)=>s + i.subtotal, 0);
+				if(basketCountEl){ basketCountEl.textContent = String(selected.length); }
+				if(basketTotalEl){ basketTotalEl.textContent = currency(grandTotal); }
+				const basketModal = document.getElementById('basketModal');
+				if(basketModal && basketModal.classList.contains('show')){
+					renderBasket(selected, grandTotal);
+				}
+			}
+
+			function renderBasket(items, total){
+				const selected = Array.isArray(items) ? items : getSelectedItems();
+				const grandTotal = (typeof total === 'number') ? total : selected.reduce((s,i)=>s + i.subtotal, 0);
+				if(!basketItemsEl) return;
+
+				if(selected.length === 0){
+					basketItemsEl.innerHTML = '<div class="small basket-empty">Your basket is empty.</div>';
+				}else{
+					basketItemsEl.innerHTML = selected.map(item => `
+						<div class="basket-item">
+							<div class="basket-item-main">
+								<div class="basket-item-thumb">
+									${item.image
+										? `<img src="products/${item.image}" alt="${item.name}" onerror="this.onerror=null;this.parentElement.textContent='IMG';this.parentElement.classList.add('is-placeholder');" />`
+										: 'IMG'}
+								</div>
+								<div class="basket-item-copy">
+									<div class="basket-item-name">${item.name}</div>
+									<div class="small">Qty: ${item.qty} x ${currency(item.price)} = <strong>${currency(item.subtotal)}</strong></div>
+								</div>
+							</div>
+							<button type="button" class="basket-remove" data-barcode="${item.barcode}">REMOVE</button>
+						</div>
+					`).join('');
+				}
+				if(basketTotalEl){ basketTotalEl.textContent = currency(grandTotal); }
+			}
+
+			function openBasket(){
+				const items = getSelectedItems();
+				const total = items.reduce((s,i)=>s + i.subtotal, 0);
+				renderBasket(items, total);
+				document.getElementById('basketModal').classList.add('show');
+			}
+
+			// Modal logic for product details / shades
+			function onThumbClick(e){
+				const el = e.currentTarget || e.target;
+				const barcode = String(el.dataset.barcode || '');
+				const prod = PRODUCTS.find(p=>p.barcode===barcode);
+				if(!prod || !(typeof prod.stock === 'number') || prod.stock <= 0) return;
+				openModal(prod);
+			}
+
+			function openModal(prod){
+				const modal = document.getElementById('productModal');
+				modal.querySelector('.modal-title').textContent = prod.name;
+				modal.querySelector('.modal-sub').textContent = prod.sub || '';
+				modal.querySelector('.modal-price').textContent = currency(prod.price || 0);
+				const modalOriginal = modal.querySelector('.modal-price-original');
+				if(prod.originalPrice){
+					modalOriginal.textContent = currency(prod.originalPrice);
+					modalOriginal.style.display = 'inline';
+				}else{
+					modalOriginal.textContent = '';
+					modalOriginal.style.display = 'none';
+				}
+				modal.querySelector('.modal-stock').textContent = (typeof prod.stock === 'number') ? prod.stock : '—';
+				const modalImg = modal.querySelector('#modalImg');
+				modalImg.innerHTML = '';
+				modalImg.classList.remove('is-placeholder');
+				if(prod.image){
+					const img = document.createElement('img');
+					img.src = `products/${prod.image}`;
+					img.alt = prod.name;
+					img.className = 'modal-img-el';
+					img.onerror = ()=>{ modalImg.textContent='IMG'; modalImg.classList.add('is-placeholder'); };
+					modalImg.appendChild(img);
+				}else{
+					modalImg.textContent = 'IMG';
+					modalImg.classList.add('is-placeholder');
+				}
+				// No shades/variations — modal displays basic product details only
+				modal.classList.add('show');
+			}
+
+			function closeModal(){ document.getElementById('productModal').classList.remove('show'); }
+			function closeStatus(){ document.getElementById('statusModal').classList.remove('show'); }
+			function closeBasket(){ document.getElementById('basketModal').classList.remove('show'); }
+
+			// close handlers
+			document.addEventListener('click', e=>{
+				if(e.target && e.target.classList && e.target.classList.contains('modal-close')) {
+					closeModal();
+					closeStatus();
+					closeBasket();
+				}
+			});
+			document.addEventListener('keydown', e=>{ if(e.key==='Escape') { closeModal(); closeStatus(); closeBasket(); } });
+
+			function showStatus(type, message){
+				const modal = document.getElementById('statusModal');
+				const title = document.getElementById('statusTitle');
+				const body = document.getElementById('statusBody');
+				modal.classList.remove('status-ok','status-err','status-warn');
+				if(type === 'ok'){ modal.classList.add('status-ok'); title.textContent = 'Order Confirmed'; }
+				else if(type === 'warn'){ modal.classList.add('status-warn'); title.textContent = 'Check Details'; }
+				else { modal.classList.add('status-err'); title.textContent = 'Order Failed'; }
+				body.textContent = message;
+				modal.classList.add('show');
+			}
+
+			document.getElementById('statusOk').addEventListener('click', closeStatus);
+			if(basketBtn){ basketBtn.addEventListener('click', openBasket); }
+			if(basketItemsEl){
+				basketItemsEl.addEventListener('click', e=>{
+					const removeBtn = e.target.closest('.basket-remove');
+					if(!removeBtn) return;
+					const barcode = String(removeBtn.dataset.barcode || '');
+					const checkbox = document.querySelector(`.selectItem[data-barcode="${barcode}"]`);
+					if(!checkbox) return;
+					checkbox.checked = false;
+					onSelect({ target: checkbox });
+				});
+			}
+
+			function checkOrderButtonState(){
+				const hasAgree = agree.checked;
+				const hasItems = document.querySelectorAll('.selectItem:checked').length>0;
+				const disabled = !(hasAgree && hasItems);
+				orderBtn.disabled = disabled;
+			}
+
+			agree.addEventListener('change', checkOrderButtonState);
+
+				const submitOrder = async ()=>{
+					const form = document.getElementById('orderForm');
+					if(!form.checkValidity()){ form.reportValidity(); return; }
+					const items = getSelectedItems();
+				if(items.length===0){ showStatus('warn','Select at least one item.'); return; }
+
+				const basePayload = {
+					first_name: document.getElementById('first').value,
+					last_name: document.getElementById('last').value,
+					email: document.getElementById('email').value,
+					contact_number: document.getElementById('phone').value,
+					delivery_method: document.getElementById('deliveryMethod').value,
+					payment_method: document.getElementById('paymentMethod').value
+				};
+
+				// Send payload to Apps Script
+				try{
+					orderBtn.disabled = true;
+					for(const item of items){
+						const payload = {
+							...basePayload,
+							barcode: String(item.barcode),
+							quantity_ordered: item.qty
+						};
+
+						const res = await fetch(APP_SCRIPT_URL, {
+							method: 'POST',
+							headers: {'Content-Type':'text/plain;charset=utf-8'},
+							body: JSON.stringify(payload)
+						});
+
+						const text = await res.text();
+						if(!res.ok){
+							throw new Error(text || ('HTTP ' + res.status));
+						}
+						let parsed;
+						try{ parsed = JSON.parse(text); }catch(e){}
+						if(parsed && parsed.status && parsed.status !== 'OK'){
+							throw new Error(parsed.status + ' (barcode: ' + payload.barcode + ')');
+						}
+					}
+
+					// Refresh inventory from sheet after successful order
+					await loadInventory();
+					render();
+					updateTotal(); checkOrderButtonState();
+					showStatus('ok','Order sent successfully.');
+				}catch(err){
+					showStatus('err','Order failed to send: ' + (err && err.message ? err.message : err));
+				}finally{
+					checkOrderButtonState();
+				}
+			};
+
+			orderBtn.addEventListener('click', submitOrder);
+
+			// Initialize page: load inventory from sheet then render
+			document.addEventListener('DOMContentLoaded', async ()=>{
+				try{
+					await loadInventory();
+				}catch(err){
+					showStatus('err','Could not load inventory: ' + (err && err.message ? err.message : err));
+				}
+				render();
+				updateTotal();
+				checkOrderButtonState();
+			});
+
+			// Header image upload & persistence
+			const uploadBtn = document.getElementById('uploadHeaderBtn');
+			const headerInput = document.getElementById('headerImageInput');
+			const HERO_BG_KEY = 'hero_bg_v1';
+			function setHeroBackground(dataUrl){
+				const hero = document.querySelector('.hero');
+				if(!hero) return;
+				hero.style.backgroundImage = `url(${dataUrl})`;
+			}
+
+			// restore hero background if saved
+			const savedHero = localStorage.getItem(HERO_BG_KEY);
+			if(savedHero){ setHeroBackground(savedHero); }
+
+			// Ensure product grid height matches the order panel height so it stops at ORDER NOW
+			function syncCatalogGridHeight(){
+				const panel = document.querySelector('.panel');
+				const catalog = document.querySelector('.catalog');
+				const grid = document.querySelector('.grid');
+				if(!panel || !catalog || !grid) return;
+				// compute available height inside catalog for the grid: panel height minus toolbar/footer and paddings
+				const panelHeight = panel.clientHeight;
+				const toolbar = catalog.querySelector('.toolbar');
+				const toolbarHeight = toolbar ? toolbar.offsetHeight : 0;
+				const footer = catalog.querySelector('.catalog-footer');
+				const footerHeight = footer ? footer.offsetHeight : 0;
+				const pad = 32; // small cushion for spacing
+				const avail = Math.max(120, panelHeight - toolbarHeight - footerHeight - pad);
+				grid.style.maxHeight = avail + 'px';
+			}
+
+			window.addEventListener('resize', syncCatalogGridHeight);
+			window.addEventListener('load', syncCatalogGridHeight);
+
+			if(uploadBtn && headerInput){
+				uploadBtn.addEventListener('click', ()=> headerInput.click());
+				headerInput.addEventListener('change', (ev)=>{
+					const f = ev.target.files && ev.target.files[0];
+					if(!f) return;
+					const reader = new FileReader();
+					reader.onload = function(e){
+						const data = e.target.result;
+						setHeroBackground(data);
+						try{ localStorage.setItem(HERO_BG_KEY, data); showStatus('ok','Header image saved locally.'); }catch(err){ showStatus('err','Could not save image locally: '+err.message); }
+					};
+					reader.readAsDataURL(f);
+				});
+			}
+		</script>
+	</body>
+</html>
+
