@@ -28,12 +28,20 @@
 						<input id="phone" name="phone" type="tel" required />
 
 						<div class="small option-title"><strong>Delivery Method</strong> <span class="required">*</span></div>
-						<select id="deliveryMethod" name="deliveryMethod" required>
+						<select class="js-custom-select" id="deliveryMethod" name="deliveryMethod" required>
 							<option value="" selected disabled>Please select</option>
 							<option value="Pickup">PICK-UP</option>
 							<option value="BGC - High Street Plaza">BGC HIGH STREET PLAZA</option>
 						</select>
-						<div class="spacer" aria-hidden="true"></div>
+
+						<div>
+							<div class="small option-title"><strong>Payment Method</strong> <span class="required">*</span></div>
+							<select class="js-custom-select" id="paymentMethod" name="paymentMethod" required>
+								<option value="" selected disabled>Please select</option>
+								<option value="Gcash">GCash</option>
+								<option value="Cash">Cash on Pickup</option>
+							</select>
+						</div>
 
 						<div>
 							<div class="small"><strong>Terms &amp; Conditions</strong></div>
@@ -52,15 +60,6 @@
 								<label for="agree">I agree to Terms &amp; Conditions <span class="required">*</span></label>
 							</div>
 						</div>
-
-						<div class="mt-8">
-						<div class="small option-title"><strong>Payment Method</strong> <span class="required">*</span></div>
-						<select id="paymentMethod" name="paymentMethod" required>
-							<option value="" selected disabled>Please select</option>
-							<option value="Gcash">GCash</option>
-							<option value="Cash">Cash on Pickup</option>
-						</select>
-					</div>
 
 					</form>
 					<div class="order-note">
@@ -560,6 +559,105 @@
 					reader.readAsDataURL(f);
 				});
 			}
+
+			// Custom select (replace native picker, incl. mobile)
+			function initCustomSelect(select){
+				if(!select || select.dataset.customized === '1') return;
+				select.dataset.customized = '1';
+
+				const wrapper = document.createElement('div');
+				wrapper.className = 'custom-select';
+				select.parentNode.insertBefore(wrapper, select);
+				wrapper.appendChild(select);
+				select.classList.add('custom-select-native');
+
+				const trigger = document.createElement('button');
+				trigger.type = 'button';
+				trigger.className = 'custom-select-trigger';
+
+				const arrow = document.createElement('span');
+				arrow.className = 'custom-select-arrow';
+				trigger.appendChild(document.createElement('span')).textContent = select.options[select.selectedIndex]?.textContent || 'Please select';
+				trigger.appendChild(arrow);
+				wrapper.appendChild(trigger);
+
+				const optionsPane = document.createElement('div');
+				optionsPane.className = 'custom-select-options';
+				wrapper.appendChild(optionsPane);
+
+				function setValue(value){
+					select.value = value;
+					const selectedOpt = select.options[select.selectedIndex];
+					trigger.firstChild.textContent = selectedOpt ? selectedOpt.textContent : 'Please select';
+					optionsPane.querySelectorAll('.custom-select-option').forEach(btn=>{
+						btn.classList.toggle('is-selected', btn.dataset.value === value);
+					});
+					select.dispatchEvent(new Event('change',{bubbles:true}));
+				}
+
+				function closeAll(){
+					document.querySelectorAll('.custom-select.is-open').forEach(el=>el.classList.remove('is-open'));
+				}
+
+				function toggle(){
+					if(wrapper.classList.contains('is-open')) {
+						wrapper.classList.remove('is-open');
+					}else{
+						closeAll();
+						wrapper.classList.add('is-open');
+						const selectedBtn = optionsPane.querySelector('.is-selected');
+						if(selectedBtn){ selectedBtn.scrollIntoView({block:'nearest'}); }
+					}
+				}
+
+				Array.from(select.options).forEach(opt=>{
+					const btn = document.createElement('button');
+					btn.type = 'button';
+					btn.className = 'custom-select-option';
+					btn.dataset.value = opt.value;
+					btn.textContent = opt.textContent;
+					btn.disabled = opt.disabled;
+					if(opt.selected) btn.classList.add('is-selected');
+					btn.addEventListener('click', ()=>{
+						if(opt.disabled) return;
+						setValue(opt.value);
+						wrapper.classList.remove('is-open');
+					});
+					optionsPane.appendChild(btn);
+				});
+
+				trigger.addEventListener('click', (e)=>{ e.stopPropagation(); toggle(); });
+				wrapper.addEventListener('keydown', (e)=>{
+					if(e.key === 'Escape'){ wrapper.classList.remove('is-open'); }
+					if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+						e.preventDefault();
+						const opts = Array.from(optionsPane.querySelectorAll('.custom-select-option:not(:disabled)'));
+						const current = opts.findIndex(btn=>btn.classList.contains('is-selected'));
+						const delta = e.key === 'ArrowDown' ? 1 : -1;
+						const next = Math.min(Math.max(current + delta, 0), opts.length -1);
+						if(opts[next]){
+							opts[next].focus();
+							setValue(opts[next].dataset.value);
+						}
+					}
+					if(e.key === 'Enter' && wrapper.classList.contains('is-open')){
+						e.preventDefault();
+						wrapper.classList.remove('is-open');
+					}
+				});
+
+				document.addEventListener('click', (e)=>{
+					if(!wrapper.contains(e.target)){ wrapper.classList.remove('is-open'); }
+				});
+
+				setValue(select.value || '');
+			}
+
+			function initAllCustomSelects(){
+				document.querySelectorAll('select.js-custom-select').forEach(initCustomSelect);
+			}
+
+			initAllCustomSelects();
 		</script>
 	</body>
 </html>

@@ -35,10 +35,99 @@ body{font-family:Inter, 'Segoe UI', system-ui, Arial; background:linear-gradient
 .panel h2{margin:0 0 10px;font-size:1.05rem}
 label{display:block;font-size:0.9rem;margin-bottom:6px;color:var(--muted)}
 input[type=text], input[type=email], input[type=tel], select{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:12px}
+.custom-select{position:relative;margin-bottom:12px}
+.custom-select-native{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    pointer-events:none;
+}
+.custom-select-trigger{
+    width:100%;
+    padding:10px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    color:#111;
+    text-align:left;
+    font-family:inherit;
+    font-size:0.95rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    transition:border-color .15s ease, box-shadow .15s ease;
+}
+.custom-select-trigger:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+    box-shadow:0 0 0 3px rgba(235,30,8,0.15);
+}
+.custom-select-arrow{
+    width:12px;
+    height:12px;
+    border:solid #7a7a7a;
+    border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+    transition:transform .12s ease;
+    flex:0 0 auto;
+}
+.custom-select.is-open .custom-select-arrow{transform:rotate(-135deg)}
+.custom-select-options{
+    position:absolute;
+    left:0;
+    right:0;
+    top:calc(100% + 6px);
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:0 10px 26px rgba(0,0,0,0.12);
+    max-height:260px;
+    overflow:auto;
+    padding:6px 0;
+    display:none;
+    z-index:55;
+}
+.custom-select.is-open .custom-select-options{display:block}
+.custom-select-option{
+    width:100%;
+    padding:10px 12px;
+    background:transparent;
+    border:0;
+    text-align:left;
+    font-family:inherit;
+    font-size:0.95rem;
+    cursor:pointer;
+}
+.custom-select-option:hover:not(:disabled),
+.custom-select-option:focus-visible{
+    background:#f4f5f7;
+}
+.custom-select-option.is-selected{
+    background:linear-gradient(90deg, rgba(235,30,8,0.08), transparent);
+    font-weight:700;
+}
+.custom-select-option:disabled{
+    color:#9a9a9a;
+    cursor:not-allowed;
+}
 .checkbox-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .checkbox-row.option{margin-left:10px;margin-top:4px}
-.option-title{display:block;padding:0;background:none;border:0;box-shadow:none;border-radius:0;font-weight:700;color:var(--muted);white-space:normal}
-.panel .option-title{margin-top:12px;margin-bottom:6px;display:block}
+.option-title{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:0;
+    background:none;
+    border:0;
+    box-shadow:none;
+    border-radius:0;
+    font-weight:700;
+    color:var(--muted);
+    white-space:normal;
+}
+.panel .option-title{margin-top:0;margin-bottom:6px}
 .panel .option-title strong{display:inline;margin:0}
 .panel .small strong{display:block;margin-top:10px;margin-bottom:6px}
 .spacer{height:12px}
@@ -222,7 +311,15 @@ main{display:flex;flex-direction:column}
 label[for="last"], label[for="first"], label[for="email"], label[for="phone"],
 label[for="agree"], label[for="delivery_pickup"], label[for="delivery_bgc"],
 label[for="p1"], label[for="p2"] { font-weight:700; }
-.required{color:var(--danger);margin-left:6px;font-weight:700}
+.required{
+    color:var(--danger);
+    margin-left:6px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    line-height:1;
+    white-space:nowrap;
+}
 h1, h2, h3 { font-size:16px; }
 pre.gs{background:#0b1220;color:#e6eef8;padding:12px;border-radius:8px;overflow:auto;font-size:0.85rem}
 footer.note{margin-top:12px;color:var(--muted);font-size:0.88rem}
